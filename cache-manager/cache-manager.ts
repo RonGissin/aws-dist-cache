@@ -17,18 +17,6 @@ export class CacheManager {
     }
 
     /**
-     * Loads the server ips configuration and populate the hash ring.
-     * @param filePath the file path to load cache server ips from.
-     */
-    public async PopulateHashRingFromFileAsync(filePath: string): Promise<void> {
-        const serverConfigStr: string = await this._readFileAsync(filePath, 'utf8');
-        console.log(serverConfigStr);
-        const serverIps: string[] = JSON.parse(serverConfigStr).serverIps;
-        console.log(serverIps[0]);
-        this._hashRing = new HashRing(serverIps);
-    }
-
-    /**
      * Gets the correct server to hold / insert the given key. 
      * @param key 
      * @returns 
