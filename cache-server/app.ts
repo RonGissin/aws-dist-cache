@@ -1,17 +1,36 @@
 import express from "express";
 import { PutRequestValidator } from "./request-validator";
 import { InMemoryCache, ExpiringValue } from "./in-memory-cache";
+import { HealthReporter } from "./health-reporter";
+
+const ec2 = require("ec2-publicip");
+let publicIp: any;
+
+ec2.getPublicIP((error: any, ip: any) => {
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    publicIp = ip;
+});
 
 const app = express();
 const port = 5000;
 
 const putValidator = new PutRequestValidator();
 const cache = new InMemoryCache();
+const healthReporter = new HealthReporter(publicIp);
 
 // add json and urlencoded parsing middleware.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+setInterval(reportHealth, 5000);
+
+function reportHealth() {
+    healthReporter.reportHealth();
+}
 
 app.put("/:key", (req, res) => {
     if(!putValidator.IsValidPutRequest(req)){
