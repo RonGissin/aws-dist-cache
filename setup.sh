@@ -69,6 +69,7 @@ RUN_INSTANCES=$(aws ec2 run-instances   \
     --image-id $UBUNTU_AMI        \
     --instance-type t2.micro            \
     --key-name $KEY_NAME                \
+    --iam-instance-profile Name=$INSTANCE_PROFILE       \
     --security-groups $SEC_GRP)
 
 INSTANCE_ID=$(echo $RUN_INSTANCES | jq -r '.Instances[0].InstanceId')
@@ -134,21 +135,22 @@ RUN_INSTANCES=$(aws ec2 run-instances   \
     --image-id $UBUNTU_AMI        \
     --instance-type t2.micro            \
     --key-name $KEY_NAME                \
+    --iam-instance-profile Name=$INSTANCE_PROFILE       \
     --security-groups $SEC_GRP_NODES)
 
 NODE_INSTANCE_ID=$(echo $RUN_INSTANCES | jq -r '.Instances[0].InstanceId')
 
 echo "Waiting for instance creation..."
-aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+aws ec2 wait instance-running --instance-ids $NODE_INSTANCE_ID
 
-PUBLIC_IP_NODE_POOL_ONE=$(aws ec2 describe-instances  --instance-ids $INSTANCE_ID | 
+PUBLIC_IP_NODE_POOL_ONE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID | 
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
 curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE_POOL_ONE\", \"poolId\": \"$PUBLIC_IP_NODE_POOL_ONE\"}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
 
-echo "Created new instance $INSTANCE_ID @ $PUBLIC_IP_NODE_POOL_ONE"
+echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE_POOL_ONE"
 
 ############################# SETUP EC2 NODE APP ENV #################################
 echo "setup production environment on instance"
@@ -184,14 +186,15 @@ RUN_INSTANCES=$(aws ec2 run-instances   \
     --image-id $UBUNTU_AMI        \
     --instance-type t2.micro            \
     --key-name $KEY_NAME                \
+    --iam-instance-profile Name=$INSTANCE_PROFILE       \
     --security-groups $SEC_GRP_NODES)
 
 NODE_INSTANCE_ID=$(echo $RUN_INSTANCES | jq -r '.Instances[0].InstanceId')
 
 echo "Waiting for instance creation..."
-aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+aws ec2 wait instance-running --instance-ids $NODE_INSTANCE_ID
 
-PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $INSTANCE_ID | 
+PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID | 
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
@@ -233,20 +236,21 @@ RUN_INSTANCES=$(aws ec2 run-instances   \
     --image-id $UBUNTU_AMI        \
     --instance-type t2.micro            \
     --key-name $KEY_NAME                \
+    --iam-instance-profile Name=$INSTANCE_PROFILE       \
     --security-groups $SEC_GRP_NODES)
 
 NODE_INSTANCE_ID=$(echo $RUN_INSTANCES | jq -r '.Instances[0].InstanceId')
 
 echo "Waiting for instance creation..."
-aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+aws ec2 wait instance-running --instance-ids $NODE_INSTANCE_ID
 
-PUBLIC_IP_NODE_POOL_TWO=$(aws ec2 describe-instances  --instance-ids $INSTANCE_ID | 
+PUBLIC_IP_NODE_POOL_TWO=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID | 
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
 curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE_POOL_TWO\", \"poolId\": \"$PUBLIC_IP_NODE_POOL_TWO\"}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
-echo "Created new instance $INSTANCE_ID @ $PUBLIC_IP_NODE_POOL_TWO"
+echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE_POOL_TWO"
 
 ############################# SETUP EC2 NODE APP ENV #################################
 echo "setup production environment on instance"
@@ -282,20 +286,21 @@ RUN_INSTANCES=$(aws ec2 run-instances   \
     --image-id $UBUNTU_AMI        \
     --instance-type t2.micro            \
     --key-name $KEY_NAME                \
+    --iam-instance-profile Name=$INSTANCE_PROFILE       \
     --security-groups $SEC_GRP_NODES)
 
 NODE_INSTANCE_ID=$(echo $RUN_INSTANCES | jq -r '.Instances[0].InstanceId')
 
 echo "Waiting for instance creation..."
-aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+aws ec2 wait instance-running --instance-ids $NODE_INSTANCE_ID
 
-PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $INSTANCE_ID | 
+PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID | 
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
 curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"poolId\": \"$PUBLIC_IP_NODE_POOL_TWO\"}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
-echo "Created new instance $INSTANCE_ID @ $PUBLIC_IP_NODE"
+echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE"
 
 ############################# SETUP EC2 NODE APP ENV #################################
 echo "setup production environment on instance"
