@@ -168,6 +168,8 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     # install dependencies
     cd aws-dist-cache
     cd cache-server
+    mkdir dist && touch dist/ipconfig.txt
+    curl http://169.254.169.254/latest/meta-data/public-ipv4 > dist/ipconfig.txt
     npm install -g typescript
     npm install
     # run app
@@ -215,6 +217,8 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     # install dependencies
     cd aws-dist-cache
     cd cache-server
+    mkdir dist && touch dist/ipconfig.txt
+    curl http://169.254.169.254/latest/meta-data/public-ipv4 > dist/ipconfig.txt
     npm install -g typescript
     npm install
     # run app
@@ -262,6 +266,8 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     # install dependencies
     cd aws-dist-cache
     cd cache-server
+    mkdir dist && touch dist/ipconfig.txt
+    curl http://169.254.169.254/latest/meta-data/public-ipv4 > dist/ipconfig.txt
     npm install -g typescript
     npm install
     # run app
@@ -309,6 +315,8 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     # install dependencies
     cd aws-dist-cache
     cd cache-server
+    mkdir dist && touch dist/ipconfig.txt
+    curl http://169.254.169.254/latest/meta-data/public-ipv4 > dist/ipconfig.txt
     npm install -g typescript
     npm install
     # run app
