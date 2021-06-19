@@ -5,6 +5,7 @@ import { HealthReporter } from "./health-reporter";
 import { promisify } from "bluebird";
 import { readFile } from "fs";
 import { Maybe, MaybeType } from "./maybe"
+import { Ok, Bad, NotFound, Created } from "./http-statuses";
 
 const readFileAsync = promisify(readFile);
 let healthReporter: HealthReporter;
@@ -21,8 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.put("/:key", (req, res) => {
     if(!putValidator.IsValidPutRequest(req)){
-        res.status(400).send({
-            statusCode: 400,
+        res.status(Bad).send({
             description: "Bad request. Must add value for key, and key expiration date."
         });
         
@@ -39,8 +39,7 @@ app.put("/:key", (req, res) => {
         expirationDate: parseInt(expirationDate)
     });
 
-    res.status(201).send({
-        statusCode: 201,
+    res.status(Created).send({
         description: `Created. For key ${key}, inserted value ${value}`
     });
 });
@@ -51,8 +50,7 @@ app.get("/:key", (req, res) => {
 
     if (value.type === MaybeType.Nothing){
         console.log("not present.")
-        res.status(404).send({
-            statusCode: 404,
+        res.status(NotFound).send({
             description: `The requested resource was not found. No value found for key ${key}`
         });
         
@@ -64,8 +62,7 @@ app.get("/:key", (req, res) => {
         console.log(value.value.expirationDate);
         console.log("expired.")
         cache.Delete(key);
-        res.status(404).send({
-            statusCode: 404,
+        res.status(NotFound).send({
             description: `The requested resource was not found. No value found for key ${key}`
         });
         
@@ -73,8 +70,7 @@ app.get("/:key", (req, res) => {
     }
 
     console.log("succeeded.");
-    res.status(200).send({
-        statusCode: 200, 
+    res.status(Ok).send({
         description: `Ok. Retrieved value ${value.value} for key ${key}`,
         value: value
     });

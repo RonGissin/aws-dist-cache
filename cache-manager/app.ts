@@ -5,6 +5,7 @@ import { CacheManager } from "./cache-manager";
 import { CacheServerClient } from "./cache-server-client";
 import { ServerHealthChecker } from "./server-health-checker";
 import { Maybe, MaybeType, Nothing, Just } from "./maybe";
+import { Ok, Bad, InternalServerErr, Created, NotFound } from "./http-statuses";
 
 const app = express();
 const port = 5000;
@@ -22,8 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post("/addNode", async (req, res) => {
     if(!addNodeValidator.IsValidPostAddNodeRequest(req)){
-        res.status(400).send({
-            statusCode: 400,
+        res.status(Bad).send({
             description: "Bad request. Must add serverIp field."
         });
         
@@ -37,8 +37,7 @@ app.post("/addNode", async (req, res) => {
         primaryToNodeListMap.set(serverIp, []);
 
         cacheManager.AddServerToHashRing(serverIp);
-        res.status(200).send({
-            statusCode: 200,
+        res.status(Ok).send({
             description: `Ok. Added primary server with ip ${serverIp} to pool.`
         });
 
@@ -49,8 +48,7 @@ app.post("/addNode", async (req, res) => {
     const smallestPoolId = await tryGetSmallestPoolIdAsync();
 
     if (smallestPoolId.type === MaybeType.Nothing) {
-        res.status(400).send({
-            statusCode: 400,
+        res.status(Bad).send({
             description: "Bad request. There are no primary nodes in the cluster. If you wish to add one, please set the newPrimaryNode flag to true."
         });
 
@@ -59,16 +57,14 @@ app.post("/addNode", async (req, res) => {
 
     primaryToNodeListMap.get(smallestPoolId.value)!.push(serverIp);
 
-    res.status(200).send({
-        statusCode: 200,
+    res.status(Ok).send({
         description: `Ok. Added server with ip ${serverIp} to existing pool with primary ip ${smallestPoolId}.`
     });
 });
 
 app.put("/:key", async (req, res) => {
     if(!putValidator.IsValidPutRequest(req)){
-        res.status(400).send({
-            statusCode: 400,
+        res.status(Bad).send({
             description: "Bad request. Must add value for key, and key expiration date."
         });
         
@@ -83,8 +79,7 @@ app.put("/:key", async (req, res) => {
     const serverIp: Maybe<string> = cacheManager.GetServerFromKey(key);
 
     if(serverIp.type === MaybeType.Nothing){
-        res.status(500).send({
-            statusCode: 500,
+        res.status(InternalServerErr).send({
             description: "Internal Server Error. Consistent hashing broken."
         });
 
@@ -103,8 +98,7 @@ app.put("/:key", async (req, res) => {
 
     await Promise.all(promises);
 
-    res.status(201).send({
-        statusCode: 201,
+    res.status(Created).send({
         description: `Created. For key ${key}, inserted value ${value}`
     });
 });
@@ -114,8 +108,7 @@ app.get("/:key", async (req, res) => {
     const serverIp: Maybe<string> = cacheManager.GetServerFromKey(key);
 
     if(serverIp.type === MaybeType.Nothing){
-        res.status(500).send({
-            statusCode: 500,
+        res.status(InternalServerErr).send({
             description: "Internal Server Error. Consistent hashing broken."
         });
 
@@ -133,8 +126,7 @@ app.get("/:key", async (req, res) => {
 
     if (value.type === MaybeType.Nothing){
         console.log("not present.")
-        res.status(404).send({
-            statusCode: 404,
+        res.status(NotFound).send({
             description: `The requested resource was not found. No value found for key ${key}`
         });
         
@@ -142,8 +134,7 @@ app.get("/:key", async (req, res) => {
     } 
 
     console.log("succeeded.");
-    res.status(200).send({
-        statusCode: 200, 
+    res.status(Ok).send({
         description: `Ok. Retrieved value ${value} for key ${key}`,
         value: value
     });
