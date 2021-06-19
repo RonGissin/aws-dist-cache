@@ -14,6 +14,7 @@ export class CacheManager {
     constructor(){
         // promisify to enable async/await.
         this._readFileAsync = util.promisify(fs.readFile);
+        this._hashRing = new HashRing();
     }
 
     /**

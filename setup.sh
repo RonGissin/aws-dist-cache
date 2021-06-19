@@ -146,7 +146,7 @@ PUBLIC_IP_NODE_POOL_ONE=$(aws ec2 describe-instances  --instance-ids $INSTANCE_I
 )
 
 curl -X POST -H "Content-Type: application/json" \
-    -d "{'serverIp': $PUBLIC_IP_NODE_POOL_ONE, 'poolId': $PUBLIC_IP_NODE_POOL_ONE}" \
+    -d "{'serverIp': '$PUBLIC_IP_NODE_POOL_ONE', 'poolId': '$PUBLIC_IP_NODE_POOL_ONE'}" \
     http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $INSTANCE_ID @ $PUBLIC_IP_NODE_POOL_ONE"
@@ -195,7 +195,7 @@ PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $INSTANCE_ID |
 )
 
 curl -X POST -H "Content-Type: application/json" \
-    -d "{'serverIp': $PUBLIC_IP_NODE, 'poolId': $PUBLIC_IP_NODE_POOL_ONE}" \
+    -d "{'serverIp': '$PUBLIC_IP_NODE', 'poolId': '$PUBLIC_IP_NODE_POOL_ONE'}" \
     http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $INSTANCE_ID @ $PUBLIC_IP_NODE"
@@ -244,7 +244,7 @@ PUBLIC_IP_NODE_POOL_TWO=$(aws ec2 describe-instances  --instance-ids $INSTANCE_I
 )
 
 curl -X POST -H "Content-Type: application/json" \
-    -d "{'serverIp': $PUBLIC_IP_NODE_POOL_TWO, 'poolId': $PUBLIC_IP_NODE_POOL_TWO}" \
+    -d "{'serverIp': '$PUBLIC_IP_NODE_POOL_TWO', 'poolId': '$PUBLIC_IP_NODE_POOL_TWO'}" \
     http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $INSTANCE_ID @ $PUBLIC_IP_NODE_POOL_TWO"
@@ -293,7 +293,7 @@ PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $INSTANCE_ID |
 )
 
 curl -X POST -H "Content-Type: application/json" \
-    -d "{'serverIp': $PUBLIC_IP_NODE, 'poolId': $PUBLIC_IP_NODE_POOL_TWO}" \
+    -d "{'serverIp': '$PUBLIC_IP_NODE', 'poolId': '$PUBLIC_IP_NODE_POOL_TWO'}" \
     http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $INSTANCE_ID @ $PUBLIC_IP_NODE"
