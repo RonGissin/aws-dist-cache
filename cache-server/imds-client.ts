@@ -13,7 +13,7 @@ export class IMDSClient {
 
         try {
             const res = await fetch("http://169.254.169.254/latest/meta-data/public-ipv4");
-            console.log("response ==== " + res);
+            console.log("response ==== " + JSON.stringify(res));
             ip = await res.text();
         } catch(e) {
             console.log(e);
