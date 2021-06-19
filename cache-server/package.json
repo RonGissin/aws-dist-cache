@@ -19,8 +19,11 @@
   },
   "homepage": "https://github.com/RonGissin/aws-dist-cache#readme",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.18.0",
+    "@aws-sdk/util-dynamodb": "^3.18.0",
     "@types/express": "^4.17.12",
     "@types/node": "^15.6.1",
+    "aws-sdk": "^2.931.0",
     "ec2-publicip": "^1.0.4",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
