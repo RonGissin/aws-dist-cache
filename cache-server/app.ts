@@ -2,35 +2,21 @@ import express from "express";
 import { PutRequestValidator } from "./request-validator";
 import { InMemoryCache, ExpiringValue } from "./in-memory-cache";
 import { HealthReporter } from "./health-reporter";
+import { IMDSClient } from "./imds-client";
 
-const ec2 = require("ec2-publicip");
 let publicIp: any;
+const imdsClient = new IMDSClient();
+let healthReporter: HealthReporter;
 
-ec2.getPublicIP((error: any, ip: any) => {
-    if (error) {
-        console.log(error);
-        return;
-    }
-
-    publicIp = ip;
-});
+const putValidator = new PutRequestValidator();
+const cache = new InMemoryCache();
 
 const app = express();
 const port = 5000;
 
-const putValidator = new PutRequestValidator();
-const cache = new InMemoryCache();
-const healthReporter = new HealthReporter(publicIp);
-
 // add json and urlencoded parsing middleware.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-setInterval(reportHealth, 5000);
-
-function reportHealth() {
-    healthReporter.reportHealth();
-}
 
 app.put("/:key", (req, res) => {
     if(!putValidator.IsValidPutRequest(req)){
@@ -93,10 +79,23 @@ app.get("/:key", (req, res) => {
     });
 });
 
+function reportHealth() {
+    healthReporter.reportHealth();
+}
 
-// start the Express server
-app.listen(port, () => {
-    console.log(`cache server started at http://localhost:${port}`);
-});
+// Get my ip and run server.
+imdsClient.getEC2Ip().then(ip => {
+    healthReporter = new HealthReporter(ip);
+    setInterval(reportHealth, 5000);
+    // start the Express server
+    app.listen(port, () => {
+        console.log(`cache server started at http://localhost:${port}`);
+    });
+})
+
+
+
+
+
 
 

@@ -31,7 +31,6 @@
 			})
 		};
 
-		console.log(JSON.stringify(params.Item));
 		try {
 			await this.dbclient.putItem(params);
 		} catch (e) {
