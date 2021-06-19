@@ -8,7 +8,7 @@ export class AddNodeRequestValidator {
     constructor() {}
 
     public IsValidPostAddNodeRequest(req: any): boolean {
-        return !this._isUndefinedOrNull(req.body.serverIp);
+        return !this._isUndefinedOrNull(req.body.poolId) || !this._isUndefinedOrNull(req.body.serverIp);
     }
 
     private _isUndefinedOrNull(param: any) {
