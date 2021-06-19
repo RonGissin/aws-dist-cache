@@ -41,7 +41,6 @@ export class CacheServerClient {
 
         try {
             const response = await fetch(`http://${serverIp}:${this._cCacheServerPort}/${key}`);
-            console.log("No exception here");
             const data = await response.json();
             value = data.value;
         } catch(e) {
