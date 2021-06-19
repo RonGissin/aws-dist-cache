@@ -2,12 +2,10 @@ import express from "express";
 import { PutRequestValidator } from "./request-validator";
 import { InMemoryCache, ExpiringValue } from "./in-memory-cache";
 import { HealthReporter } from "./health-reporter";
-import { IMDSClient } from "./imds-client";
 import { promisify } from "bluebird";
 import { readFile } from "fs";
 
 const readFileAsync = promisify(readFile);
-const imdsClient = new IMDSClient();
 let healthReporter: HealthReporter;
 
 const putValidator = new PutRequestValidator();
