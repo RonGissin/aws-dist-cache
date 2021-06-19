@@ -25,6 +25,7 @@
 		"@types/express": "^4.17.12",
 		"@types/node": "^15.6.1",
 		"aws-sdk": "^2.931.0",
+		"bluebird": "^3.7.2",
 		"express": "^4.17.1",
 		"fs": "0.0.1-security",
 		"node-ec2-metadata": "0.0.5",

@@ -3,8 +3,10 @@ import { PutRequestValidator } from "./request-validator";
 import { InMemoryCache, ExpiringValue } from "./in-memory-cache";
 import { HealthReporter } from "./health-reporter";
 import { IMDSClient } from "./imds-client";
+import { promisify } from "bluebird";
+import { readFile } from "fs";
 
-let publicIp: any;
+const readFileAsync = promisify(readFile);
 const imdsClient = new IMDSClient();
 let healthReporter: HealthReporter;
 
@@ -83,15 +85,17 @@ function reportHealth() {
     healthReporter.reportHealth();
 }
 
-// Get my ip and run server.
-imdsClient.getEC2Ip().then(ip => {
-    healthReporter = new HealthReporter(ip);
+const ipFilePath = __dirname + "/ipconfig.txt";
+readFileAsync(ipFilePath).then(ip => {
+    console.log(ip.toString());
+    healthReporter = new HealthReporter(ip.toString());
     setInterval(reportHealth, 5000);
     // start the Express server
     app.listen(port, () => {
         console.log(`cache server started at http://localhost:${port}`);
     });
-})
+});
+
 
 
 
