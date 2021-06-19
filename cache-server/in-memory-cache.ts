@@ -1,6 +1,9 @@
 /**
  * A class that defines an in memory cache client. 
  */
+
+import { Maybe, Nothing, Just } from "./maybe";
+
 export class InMemoryCache {
     /**
      * @constructor
@@ -13,12 +16,12 @@ export class InMemoryCache {
         this._data.set(key, value);
     }
 
-    public Get(key: string): ExpiringValue | null | undefined {
+    public Get(key: string): Maybe<ExpiringValue> {
         if (!this._data.has(key)){
-            return null;
+            return Nothing();
         }
 
-        return this._data.get(key);
+        return Just(this._data.get(key)!);
     }
 
     public Delete(key: string): void {

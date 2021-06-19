@@ -1,5 +1,6 @@
 import fs from 'fs';
 import util from 'util';
+import { Maybe, Nothing, Just } from './maybe';
 
 //const HashRing = require('./consistent-hashing/hash-ring.js'); 
 const HashRing = require('hashring');
@@ -22,11 +23,11 @@ export class CacheManager {
      * @param key 
      * @returns 
      */
-    public GetServerFromKey(key: string): string | null | undefined {
-        const hashKey = this._hashRing.get(key);
-        if(hashKey === undefined) return null;
+    public GetServerFromKey(key: string): Maybe<string> {
+        const hashKey: string = this._hashRing.get(key);
+        if(hashKey === undefined) return Nothing();
 
-        return hashKey;
+        return Just(hashKey);
     }
 
     /**

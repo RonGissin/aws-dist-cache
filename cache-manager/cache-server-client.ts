@@ -3,6 +3,7 @@
  */
 
 const fetch = require('node-fetch');
+import { Maybe, Nothing, Just } from './maybe';
 
 export class CacheServerClient {
     /**
@@ -36,13 +37,13 @@ export class CacheServerClient {
         }
     }
 
-    public async getDataAsync(serverIp: string, key: string): Promise<string | null | undefined> {
-        let value: string | null | undefined = null;
+    public async getDataAsync(serverIp: string, key: string): Promise<Maybe<string>> {
+        let value: Maybe<string> = Nothing();
 
         try {
-            const response = await fetch(`http://${serverIp}:${this._cCacheServerPort}/${key}`);
-            const data = await response.json();
-            value = data.value;
+            const response: any = await fetch(`http://${serverIp}:${this._cCacheServerPort}/${key}`);
+            const data: any = await response.json();
+            value = Just(data.value);
         } catch(e) {
             console.log(`Exception while trying to connect with server - ${serverIp}. error = ${e}`);
         }

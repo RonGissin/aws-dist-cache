@@ -4,6 +4,7 @@
 
  const { DynamoDB } = require('@aws-sdk/client-dynamodb');
  const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb');
+ import { Maybe, MaybeType } from './maybe';
  
  const REGION = 'us-east-2';
 
@@ -20,7 +21,7 @@
 		this.tableName = 'CacheServers';
     }
 
-    public getServersAlive(serverPool: string[] | undefined): string[] {
+    public async getServersAliveAsync(serverPool: string[]): Promise<string[]> {
         if (serverPool === undefined) return [];
         
         const serversAlive: string[] = [];

@@ -4,6 +4,7 @@ import { InMemoryCache, ExpiringValue } from "./in-memory-cache";
 import { HealthReporter } from "./health-reporter";
 import { promisify } from "bluebird";
 import { readFile } from "fs";
+import { Maybe, MaybeType } from "./maybe"
 
 const readFileAsync = promisify(readFile);
 let healthReporter: HealthReporter;
@@ -46,9 +47,9 @@ app.put("/:key", (req, res) => {
 
 app.get("/:key", (req, res) => {
     const key: string = req.params.key;
-    const value: ExpiringValue | null | undefined = cache.Get(key);
+    const value: Maybe<ExpiringValue> = cache.Get(key);
 
-    if (value === null || value === undefined){
+    if (value.type === MaybeType.Nothing){
         console.log("not present.")
         res.status(404).send({
             statusCode: 404,
@@ -58,9 +59,9 @@ app.get("/:key", (req, res) => {
         return;
     } 
 
-    if(value.expirationDate - Date.now() < 0){
+    if(value.value.expirationDate - Date.now() < 0){
         console.log(Date.now());
-        console.log(value.expirationDate);
+        console.log(value.value.expirationDate);
         console.log("expired.")
         cache.Delete(key);
         res.status(404).send({
