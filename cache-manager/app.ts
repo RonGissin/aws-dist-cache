@@ -34,7 +34,7 @@ app.post("/addNode", async (req, res) => {
     const serverIp: string = req.body.serverIp;
 
     if (isNewPrimaryNode) {
-        primaryToNodeListMap.set(serverIp, []);
+        primaryToNodeListMap.set(serverIp, [serverIp]);
 
         cacheManager.AddServerToHashRing(serverIp);
         res.status(Ok).send({
@@ -107,6 +107,8 @@ app.get("/:key", async (req, res) => {
     const key: string = req.params.key;
     const serverIp: Maybe<string> = cacheManager.GetServerFromKey(key);
 
+    console.log("this is the server ip =" + serverIp);
+
     if(serverIp.type === MaybeType.Nothing){
         res.status(InternalServerErr).send({
             description: "Internal Server Error. Consistent hashing broken."
@@ -116,6 +118,7 @@ app.get("/:key", async (req, res) => {
     }
 
     let serverPool: string[] = primaryToNodeListMap.get(serverIp.value)!;
+    console.log("server pool " + JSON.stringify(serverPool));
     const serversAlive: string[] = await serverHealthChecker.getServersAliveAsync(serverPool);
     serverPool = serverPool.filter(server => serversAlive.includes(server));
     primaryToNodeListMap.set(serverIp.value, serverPool);
