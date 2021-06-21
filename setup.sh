@@ -147,7 +147,7 @@ PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID |
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
-curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"isNewPrimaryNode\": true}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
+curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"newPrimaryNode\": true}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE"
 
@@ -197,7 +197,7 @@ PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID |
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
-curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"isNewPrimaryNode\": false}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
+curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"newPrimaryNode\": false}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $INSTANCE_ID @ $PUBLIC_IP_NODE"
 
@@ -247,7 +247,7 @@ PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID |
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
-curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"isNewPrimaryNode\": true}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
+curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"newPrimaryNode\": true}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE"
 
@@ -297,7 +297,7 @@ PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID |
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
-curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"isNewPrimaryNode\": false}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
+curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"newPrimaryNode\": false}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE"
 

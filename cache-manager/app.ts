@@ -49,7 +49,7 @@ app.post("/addNode", async (req, res) => {
 
     if (smallestPoolId.type === MaybeType.Nothing) {
         res.status(Bad).send({
-            description: "Bad request. There are no primary nodes in the cluster. If you wish to add one, please set the newPrimaryNode flag to true."
+            description: `Bad request. There are no primary nodes in the cluster. If you wish to add one, please set the newPrimaryNode flag to true.`
         });
 
         return;
