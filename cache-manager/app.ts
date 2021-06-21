@@ -38,7 +38,7 @@ app.post("/addNode", async (req, res) => {
 
         cacheManager.AddServerToHashRing(serverIp);
         res.status(Ok).send({
-            description: `Ok. Added primary server with ip ${serverIp} to pool.`
+            description: `Ok. Added primary server with ip ${serverIp} to new pool.`
         });
 
         return; 
@@ -135,7 +135,7 @@ app.get("/:key", async (req, res) => {
 
     console.log("succeeded.");
     res.status(Ok).send({
-        description: `Ok. Retrieved value ${value} for key ${key}`,
+        description: `Ok. Retrieved value ${value} for key ${key} from server ${chosenServerIp}`,
         value: value
     });
 });
