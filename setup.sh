@@ -143,18 +143,17 @@ NODE_INSTANCE_ID=$(echo $RUN_INSTANCES | jq -r '.Instances[0].InstanceId')
 echo "Waiting for instance creation..."
 aws ec2 wait instance-running --instance-ids $NODE_INSTANCE_ID
 
-PUBLIC_IP_NODE_POOL_ONE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID | 
+PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID | 
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
-curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE_POOL_ONE\", \"poolId\": \"$PUBLIC_IP_NODE_POOL_ONE\"}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
+curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"isNewPrimaryNode\": true}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
-
-echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE_POOL_ONE"
+echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE"
 
 ############################# SETUP EC2 NODE APP ENV #################################
 echo "setup production environment on instance"
-ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-user@$PUBLIC_IP_NODE_POOL_ONE <<EOF
+ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-user@$PUBLIC_IP_NODE <<EOF
     # update
     sudo yum update -y
     # install git
@@ -198,7 +197,7 @@ PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID |
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
-curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"poolId\": \"$PUBLIC_IP_NODE_POOL_ONE\"}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
+curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"isNewPrimaryNode\": false}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $INSTANCE_ID @ $PUBLIC_IP_NODE"
 
@@ -244,17 +243,17 @@ NODE_INSTANCE_ID=$(echo $RUN_INSTANCES | jq -r '.Instances[0].InstanceId')
 echo "Waiting for instance creation..."
 aws ec2 wait instance-running --instance-ids $NODE_INSTANCE_ID
 
-PUBLIC_IP_NODE_POOL_TWO=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID | 
+PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID | 
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
-curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE_POOL_TWO\", \"poolId\": \"$PUBLIC_IP_NODE_POOL_TWO\"}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
+curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"isNewPrimaryNode\": true}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
-echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE_POOL_TWO"
+echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE"
 
 ############################# SETUP EC2 NODE APP ENV #################################
 echo "setup production environment on instance"
-ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-user@$PUBLIC_IP_NODE_POOL_TWO <<EOF
+ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-user@$PUBLIC_IP_NODE <<EOF
     # update
     sudo yum update -y
     # install git
@@ -298,7 +297,7 @@ PUBLIC_IP_NODE=$(aws ec2 describe-instances  --instance-ids $NODE_INSTANCE_ID |
     jq -r '.Reservations[0].Instances[0].PublicIpAddress'
 )
 
-curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"poolId\": \"$PUBLIC_IP_NODE_POOL_TWO\"}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
+curl -d "{\"serverIp\": \"$PUBLIC_IP_NODE\", \"isNewPrimaryNode\": false}" -H "Content-Type: application/json" -X POST http://$PUBLIC_IP_MANAGER:5000/addNode
 
 echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE"
 
