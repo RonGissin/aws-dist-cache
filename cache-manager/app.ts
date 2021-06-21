@@ -145,7 +145,7 @@ app.get("/:key", async (req, res) => {
 
 async function tryGetSmallestPoolIdAsync(): Promise<Maybe<string>> {
     let smallestPoolId: Maybe<string> = Nothing();
-    let smallestPoolSize: number = 0;
+    let smallestPoolSize: number = Number.MAX_VALUE;
     let poolSize: number;
 
     primaryToNodeListMap.forEach(async (nodes: string[], key: string) => {
