@@ -37,6 +37,9 @@
 
 
 
+
+
+
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -57,11 +60,15 @@ The `cache-manager` uses the `node-hashring` library of @3rd-Eden to consistentl
 * Adding servers is allowed and supported. When a new node is added, it is simply appended to an existing server pool.
 
 
+
+
+
 ### Built With
 
 * [Node.js (nodejs.org)](https://nodejs.org/en/)
 * [TypeScript](https://www.typescriptlang.org/)
 * [node-hashring](https://github.com/3rd-Eden/node-hashring)
+
 
 
 
@@ -71,11 +78,17 @@ The `cache-manager` uses the `node-hashring` library of @3rd-Eden to consistentl
 
 To get a local copy up and running follow these simple steps.
 
+
+
+
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
 * node - Install from [here](https://nodejs.org/en/).
  make sure you get latest npm version.
+
+
+
 
 ### Setup for Development
 
@@ -110,6 +123,10 @@ This is an example of how to list things you need to use the software and how to
    npm run build
    npm run start
    ```
+   
+   
+   
+   
 ### Setup for Deployment
 
 <u>**This step is needed only if you intend to deploy the solution to AWS EC2 instances**</u>
@@ -132,6 +149,8 @@ Run `./setup.sh` in order to deploy the solution to your AWS environment.
 See [Deployment](#deployment) to learn more about the different deployment scripts.
 
 
+
+
 <!-- DEPLOYMENT EXAMPLES -->
 ## Deployment
 In this section we explain how to deploy the solution to an AWS environment using the provided bash scripts.
@@ -151,6 +170,9 @@ In this section we explain how to deploy the solution to an AWS environment usin
    * **NOTE:** This script has one **required** parameter which is the ip of the gateway server (the one running the `cache-manager` proj)
    * **ANOTHER NOTE:** When adding a new node, the system automatically appends it to the smallest pool out of the two pools
      in order to provide better distribution.
+
+
+
 
 ## Usage
 
