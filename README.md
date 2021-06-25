@@ -37,7 +37,7 @@
 
 
 
-
+<br/>
 
 
 <!-- ABOUT THE PROJECT -->
@@ -60,7 +60,7 @@ The `cache-manager` uses the `node-hashring` library of @3rd-Eden to consistentl
 * Adding servers is allowed and supported. When a new node is added, it is simply appended to an existing server pool.
 
 
-
+<br/>
 
 
 ### Built With
@@ -70,7 +70,7 @@ The `cache-manager` uses the `node-hashring` library of @3rd-Eden to consistentl
 * [node-hashring](https://github.com/3rd-Eden/node-hashring)
 
 
-
+<br/>
 
 <!-- GETTING STARTED -->
 
@@ -78,7 +78,7 @@ The `cache-manager` uses the `node-hashring` library of @3rd-Eden to consistentl
 
 To get a local copy up and running follow these simple steps.
 
-
+<br/>
 
 
 ### Prerequisites
@@ -88,7 +88,7 @@ This is an example of how to list things you need to use the software and how to
  make sure you get latest npm version.
 
 
-
+<br/>
 
 ### Setup for Development
 
@@ -124,7 +124,7 @@ This is an example of how to list things you need to use the software and how to
    npm run start
    ```
    
-   
+<br/>
    
    
 ### Setup for Deployment
@@ -149,7 +149,7 @@ Run `./setup.sh` in order to deploy the solution to your AWS environment.
 See [Deployment](#deployment) to learn more about the different deployment scripts.
 
 
-
+<br/>
 
 <!-- DEPLOYMENT EXAMPLES -->
 ## Deployment
@@ -172,7 +172,7 @@ In this section we explain how to deploy the solution to an AWS environment usin
      in order to provide better distribution.
 
 
-
+<br/>
 
 ## Usage
 
@@ -219,7 +219,7 @@ Must contain following fields in json payload
    }
 ```
 
-
+<br/>
 
 
 <!-- ACKNOWLEDGEMENTS -->
