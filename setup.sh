@@ -341,3 +341,8 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     exit
 EOF
 
+echo "."
+echo "."
+echo "."
+echo "."
+echo "Finished bootstrapping cache solution. You can now access the cache gateway server through ip - $PUBLIC_IP_MANAGER"
