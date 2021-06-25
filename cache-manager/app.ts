@@ -28,7 +28,7 @@ const port = 5000;
 
 const putValidator = new PutRequestValidator();
 const addNodeValidator = new AddNodeRequestValidator();
-const cacheManager = new ServerHashRingHandler();
+const hashRingHandler = new ServerHashRingHandler();
 const serversClient = new CacheServerClient();
 const serverHealthChecker = new ServerHealthChecker();
 const primaryToNodeListMap = new Map<string, string[]>();
@@ -52,7 +52,7 @@ app.post("/addNode", async (req, res) => {
     if (isNewPrimaryNode) {
         primaryToNodeListMap.set(serverIp, [serverIp]);
 
-        cacheManager.AddServer(serverIp);
+        hashRingHandler.AddServer(serverIp);
         res.status(Ok).send({
             description: CAddedPrimaryServerOk,
             primaryServerIp: serverIp
@@ -95,7 +95,7 @@ app.put("/:key", async (req, res) => {
     const expirationDate: number = req.body.expirationDate;
 
     // get cache server.
-    const serverIp: Maybe<string> = cacheManager.GetServerFromKey(key);
+    const serverIp: Maybe<string> = hashRingHandler.GetServerFromKey(key);
 
     if(serverIp.type === MaybeType.Nothing){
         res.status(InternalServerErr).send({
@@ -127,7 +127,7 @@ app.put("/:key", async (req, res) => {
 
 app.get("/:key", async (req, res) => {
     const key: string = req.params.key;
-    const serverIp: Maybe<string> = cacheManager.GetServerFromKey(key);
+    const serverIp: Maybe<string> = hashRingHandler.GetServerFromKey(key);
 
     if(serverIp.type === MaybeType.Nothing){
         res.status(InternalServerErr).send({
