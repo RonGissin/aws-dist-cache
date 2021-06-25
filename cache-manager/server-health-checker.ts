@@ -4,7 +4,6 @@
 
  const { DynamoDB } = require('@aws-sdk/client-dynamodb');
  const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb');
- import { Maybe, MaybeType } from './maybe';
  
  const REGION = 'us-east-2';
 
@@ -26,12 +25,12 @@
         
         const serversAlive: string[] = [];
 
-        serverPool.forEach(async serverIp => {
+        for (const serverIp of serverPool) {
             const serverItem: any = await this._getServer(serverIp);
-            if (Date.now() - serverItem.reportTime < 10000) {
+            if (Date.now() - serverItem.reportTime < 40000) {
                 serversAlive.push(serverIp);
             }
-        });
+        }
 
         return serversAlive;
     }

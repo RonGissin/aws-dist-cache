@@ -92,10 +92,11 @@ app.put("/:key", async (req, res) => {
     primaryToNodeListMap.set(serverIp.value, serverPool);
     
     let promises: Promise<void>[] = [];
-    primaryToNodeListMap.get(serverIp.value)!.forEach(server => {
+    
+    for (const server of primaryToNodeListMap.get(serverIp.value)!) {
         promises.push(serversClient.putDataAsync(server, key, value, expirationDate));
-    });
-
+    }
+    
     await Promise.all(promises);
 
     res.status(Created).send({
@@ -123,9 +124,19 @@ app.get("/:key", async (req, res) => {
     serverPool = serverPool.filter(server => serversAlive.includes(server));
     primaryToNodeListMap.set(serverIp.value, serverPool);
 
-    const chosenServerIp: string = serverPool[Math.floor(Math.random() * serverPool.length)];
+    //const chosenServerIp: string = serverPool[Math.floor(Math.random() * serverPool.length)];
+    shufflePool(serverPool);
 
-    const value: Maybe<string> = await serversClient.getDataAsync(chosenServerIp, key);
+    let value: Maybe<string> = Nothing();
+    let chosenServerIp: string = "";
+
+    for (const serverIp of serverPool) {
+        value = await serversClient.getDataAsync(serverIp, key);
+        if (value.type === MaybeType.Just){
+            chosenServerIp = serverIp;
+            break;
+        }
+    }
 
     if (value.type === MaybeType.Nothing){
         console.log("not present.")
@@ -138,8 +149,8 @@ app.get("/:key", async (req, res) => {
 
     console.log("succeeded.");
     res.status(Ok).send({
-        description: `Ok. Retrieved value ${value} for key ${key} from server ${chosenServerIp}`,
-        value: value
+        description: `Ok. Retrieved value ${value.value} for key ${key} from server ${chosenServerIp}`,
+        value: value.value
     });
 });
 
@@ -158,6 +169,14 @@ async function tryGetSmallestPoolIdAsync(): Promise<Maybe<string>> {
     });
 
     return smallestPoolId;
+}
+
+/* Randomize array in-place using Durstenfeld shuffle algorithm */
+function shufflePool(serverPool: string[]): void {
+    for (let i = serverPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [serverPool[i], serverPool[j]] = [serverPool[j], serverPool[i]];
+    }
 }
 
 // start the Express server
