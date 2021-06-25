@@ -28,8 +28,6 @@ export class CacheServerClient {
         } catch(e) {
             console.log(`Exception while trying to connect with server - ${serverIp}`);
         }
-
-        console.log("Manager putting " + JSON.stringify(payload));
     }
 
     public async getDataAsync(serverIp: string, key: string): Promise<Maybe<string>> {
