@@ -176,7 +176,10 @@ In this section we explain how to deploy the solution to an AWS environment usin
 
 ## Usage
 
-In this section we explain the different endpoints that the cache gateway server exposes.
+In this section we explain the different endpoints that the cache gateway server exposes.  
+To know which host you should access, look at the outputs of your `setup.sh` script.  
+The last output of the script should echo something like 'You can now access the cache gateway server through ip..'.  
+You will find the gateway server ip there.  
 
 ### Endpoints
 
