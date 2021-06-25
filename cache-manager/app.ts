@@ -159,14 +159,14 @@ async function tryGetSmallestPoolIdAsync(): Promise<Maybe<string>> {
     let smallestPoolSize: number = Number.MAX_VALUE;
     let poolSize: number;
 
-    primaryToNodeListMap.forEach(async (nodes: string[], key: string) => {
-        poolSize = (await serverHealthChecker.getServersAliveAsync(nodes)).length;
+    for (let keyToNodes of Array.from(primaryToNodeListMap.entries())) {
+        poolSize = (await serverHealthChecker.getServersAliveAsync(keyToNodes[1])).length;
 
         if (poolSize < smallestPoolSize) {
             smallestPoolSize = poolSize;
-            smallestPoolId = Just(key);
+            smallestPoolId = Just(keyToNodes[0]);
         }
-    });
+    }
 
     return smallestPoolId;
 }

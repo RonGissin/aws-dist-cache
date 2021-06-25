@@ -49,7 +49,6 @@ app.get("/:key", (req, res) => {
     const value: Maybe<ExpiringValue> = cache.Get(key);
 
     if (value.type === MaybeType.Nothing){
-        console.log("not present.")
         res.status(NotFound).send({
             description: `The requested resource was not found. No value found for key ${key}`
         });
@@ -58,9 +57,6 @@ app.get("/:key", (req, res) => {
     } 
 
     if(value.value.expirationDate - Date.now() < 0){
-        console.log(Date.now());
-        console.log(value.value.expirationDate);
-        console.log("expired.")
         cache.Delete(key);
         res.status(NotFound).send({
             description: `The requested resource was not found. No value found for key ${key}`
@@ -69,10 +65,9 @@ app.get("/:key", (req, res) => {
         return;
     }
 
-    console.log("succeeded.");
     res.status(Ok).send({
         description: `Ok. Retrieved value ${value.value} for key ${key}`,
-        value: value
+        value: value.value
     });
 });
 

@@ -17,13 +17,6 @@ export class CacheServerClient {
             expirationDate: expirationDate
         }
 
-        const options = {
-            host: serverIp,
-            port: 5000,
-            path: `/${key}`,
-            method: 'PUT'
-        }; 
-
         try {
             await fetch(`http://${serverIp}:${this._cCacheServerPort}/${key}`, {
                 method: 'PUT',
@@ -35,6 +28,8 @@ export class CacheServerClient {
         } catch(e) {
             console.log(`Exception while trying to connect with server - ${serverIp}`);
         }
+
+        console.log("Manager putting " + JSON.stringify(payload));
     }
 
     public async getDataAsync(serverIp: string, key: string): Promise<Maybe<string>> {
@@ -42,8 +37,10 @@ export class CacheServerClient {
 
         try {
             const response: any = await fetch(`http://${serverIp}:${this._cCacheServerPort}/${key}`);
-            const data: any = await response.json();
-            value = Just(data.value);
+            if (response.ok) {
+                const data: any = await response.json();
+                value = Just(data.value.value);
+            }
         } catch(e) {
             console.log(`Exception while trying to connect with server - ${serverIp}. error = ${e}`);
         }
