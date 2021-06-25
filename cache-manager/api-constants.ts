@@ -1,4 +1,4 @@
-export const CInvalidAddNodeBadRequest = "Bad request. Must add serverIp field.";
+export const CInvalidAddNodeBadRequest = "Bad request. Must add serverIp, and newPrimaryNode fields.";
 export const CAddedPrimaryServerOk = "Ok. Added primary server to new pool.";
 export const CAddedServerToExistingPoolOk = "Ok. Added new server to an existing server pool.";
 export const CServerPoolEmptyBadRequest = "Bad request. There are no primary nodes in the cluster. If you wish to add one, please set the newPrimaryNode flag to true.";

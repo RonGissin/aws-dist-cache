@@ -62,7 +62,7 @@ app.post("/addNode", async (req, res) => {
     }
 
     // add server to smallest existing pool.
-    const smallestPoolId = await tryGetSmallestPoolIdAsync();
+    const smallestPoolId: Maybe<string> = await tryGetSmallestPoolIdAsync();
 
     if (smallestPoolId.type === MaybeType.Nothing) {
         res.status(Bad).send({
@@ -77,7 +77,7 @@ app.post("/addNode", async (req, res) => {
     res.status(Ok).send({
         description: CAddedServerToExistingPoolOk,
         addedServerIp: serverIp,
-        primaryServerIp: smallestPoolId
+        primaryServerIp: smallestPoolId.value
     });
 });
 
