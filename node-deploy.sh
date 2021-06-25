@@ -2,6 +2,8 @@
 # debug
 # set -o xtrace
 
+# This script expects a single parameter, being the gateway server's (cache manager) ip.
+
 ################################ VARIABLES ######################################
 PUBLIC_IP_MANAGER=$1
 KEY_NAME="dist-cache-`date +'%N'`"

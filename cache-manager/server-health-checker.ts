@@ -1,11 +1,12 @@
 /**
- * A class to check server health reports from DynamoDB.
+ * A class that checks server health reports from DynamoDB.
  */
 
  const { DynamoDB } = require('@aws-sdk/client-dynamodb');
  const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb');
  
  const REGION = 'us-east-2';
+ const CServerHealthLimit = 40000;
 
  export class ServerHealthChecker {
     
@@ -27,7 +28,7 @@
 
         for (const serverIp of serverPool) {
             const serverItem: any = await this._getServer(serverIp);
-            if (Date.now() - serverItem.reportTime < 40000) {
+            if (Date.now() - serverItem.reportTime < CServerHealthLimit) {
                 serversAlive.push(serverIp);
             }
         }

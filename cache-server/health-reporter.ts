@@ -3,7 +3,7 @@
  */
 
  const { DynamoDB } = require('@aws-sdk/client-dynamodb');
- const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb');
+ const { marshall } = require('@aws-sdk/util-dynamodb');
  
  const REGION = 'us-east-2';
 

@@ -1,3 +1,7 @@
+/**
+ * HTTP status codes.
+ */
+
 export const Ok: number = 200;
 export const Bad: number = 400;
 export const NotFound: number = 404;

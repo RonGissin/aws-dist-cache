@@ -6,6 +6,11 @@ import { promisify } from "bluebird";
 import { readFile } from "fs";
 import { Maybe, MaybeType } from "./maybe"
 import { Ok, Bad, NotFound, Created } from "./http-statuses";
+import { CGetExpired, CGetNotFound, CGetOk, CPutBadRequest, CPutOk } from "./api-constants";
+
+/**
+ * CacheServer - runs a server that acts as a single cache server in a pool. 
+ */
 
 const readFileAsync = promisify(readFile);
 let healthReporter: HealthReporter;
@@ -23,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.put("/:key", (req, res) => {
     if(!putValidator.IsValidPutRequest(req)){
         res.status(Bad).send({
-            description: "Bad request. Must add value for key, and key expiration date."
+            description: CPutBadRequest
         });
         
         return;
@@ -40,7 +45,9 @@ app.put("/:key", (req, res) => {
     });
 
     res.status(Created).send({
-        description: `Created. For key ${key}, inserted value ${value}`
+        description: CPutOk,
+        key: key,
+        value: value
     });
 });
 
@@ -50,7 +57,8 @@ app.get("/:key", (req, res) => {
 
     if (value.type === MaybeType.Nothing){
         res.status(NotFound).send({
-            description: `The requested resource was not found. No value found for key ${key}`
+            description: CGetNotFound,
+            key: key
         });
         
         return;
@@ -59,14 +67,16 @@ app.get("/:key", (req, res) => {
     if(value.value.expirationDate - Date.now() < 0){
         cache.Delete(key);
         res.status(NotFound).send({
-            description: `The requested resource was not found. No value found for key ${key}`
+            description: CGetExpired,
+            key: key
         });
         
         return;
     }
 
     res.status(Ok).send({
-        description: `Ok. Retrieved value ${value.value} for key ${key}`,
+        description: CGetOk,
+        key: key,
         value: value.value
     });
 });
@@ -82,7 +92,7 @@ readFileAsync(ipFilePath).then(ip => {
     setInterval(reportHealth, 5000);
     // start the Express server
     app.listen(port, () => {
-        console.log(`cache server started at http://localhost:${port}`);
+        console.log(`cache server started running at port ${port}`);
     });
 });
 

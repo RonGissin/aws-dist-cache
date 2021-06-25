@@ -6,6 +6,22 @@ import { CacheServerClient } from "./cache-server-client";
 import { ServerHealthChecker } from "./server-health-checker";
 import { Maybe, MaybeType, Nothing, Just } from "./maybe";
 import { Ok, Bad, InternalServerErr, Created, NotFound } from "./http-statuses";
+import { 
+    CAddedPrimaryServerOk,
+    CAddedServerToExistingPoolOk,
+    CEmptyHashRingInternalSerErr,
+    CGetNotFound,
+    CGetOk,
+    CInvalidAddNodeBadRequest,
+    CInvalidPutBadRequest,
+    CPutOk,
+    CServerPoolEmptyBadRequest }
+from "./api-constants";
+
+/**
+ * CacheManager - runs a server that acts as the gateway for cache related requests (GET/PUT) 
+ * as well as requests to add nodes to the server pool (POST).
+ */
 
 const app = express();
 const port = 5000;
@@ -24,7 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 app.post("/addNode", async (req, res) => {
     if(!addNodeValidator.IsValidPostAddNodeRequest(req)){
         res.status(Bad).send({
-            description: "Bad request. Must add serverIp field."
+            description: CInvalidAddNodeBadRequest
         });
         
         return;
@@ -38,7 +54,8 @@ app.post("/addNode", async (req, res) => {
 
         cacheManager.AddServerToHashRing(serverIp);
         res.status(Ok).send({
-            description: `Ok. Added primary server with ip ${serverIp} to new pool.`
+            description: CAddedPrimaryServerOk,
+            primaryServerIp: serverIp
         });
 
         return; 
@@ -49,7 +66,7 @@ app.post("/addNode", async (req, res) => {
 
     if (smallestPoolId.type === MaybeType.Nothing) {
         res.status(Bad).send({
-            description: `Bad request. There are no primary nodes in the cluster. If you wish to add one, please set the newPrimaryNode flag to true.`
+            description: CServerPoolEmptyBadRequest
         });
 
         return;
@@ -58,14 +75,16 @@ app.post("/addNode", async (req, res) => {
     primaryToNodeListMap.get(smallestPoolId.value)!.push(serverIp);
 
     res.status(Ok).send({
-        description: `Ok. Added server with ip ${serverIp} to existing pool with primary ip ${smallestPoolId}.`
+        description: CAddedServerToExistingPoolOk,
+        addedServerIp: serverIp,
+        primaryServerIp: smallestPoolId
     });
 });
 
 app.put("/:key", async (req, res) => {
     if(!putValidator.IsValidPutRequest(req)){
         res.status(Bad).send({
-            description: "Bad request. Must add value for key, and key expiration date."
+            description: CInvalidPutBadRequest
         });
         
         return;
@@ -80,7 +99,7 @@ app.put("/:key", async (req, res) => {
 
     if(serverIp.type === MaybeType.Nothing){
         res.status(InternalServerErr).send({
-            description: "Internal Server Error. Consistent hashing broken."
+            description: CEmptyHashRingInternalSerErr
         });
 
         return;
@@ -100,7 +119,9 @@ app.put("/:key", async (req, res) => {
     await Promise.all(promises);
 
     res.status(Created).send({
-        description: `Created. For key ${key}, inserted value ${value}`
+        description: CPutOk,
+        key: key,
+        value: value
     });
 });
 
@@ -108,18 +129,15 @@ app.get("/:key", async (req, res) => {
     const key: string = req.params.key;
     const serverIp: Maybe<string> = cacheManager.GetServerFromKey(key);
 
-    console.log("this is the server ip =" + serverIp);
-
     if(serverIp.type === MaybeType.Nothing){
         res.status(InternalServerErr).send({
-            description: "Internal Server Error. Consistent hashing broken."
+            description: CEmptyHashRingInternalSerErr
         });
 
         return;
     }
 
     let serverPool: string[] = primaryToNodeListMap.get(serverIp.value)!;
-    console.log("server pool " + JSON.stringify(serverPool));
     const serversAlive: string[] = await serverHealthChecker.getServersAliveAsync(serverPool);
     serverPool = serverPool.filter(server => serversAlive.includes(server));
     primaryToNodeListMap.set(serverIp.value, serverPool);
@@ -132,24 +150,25 @@ app.get("/:key", async (req, res) => {
 
     for (const serverIp of serverPool) {
         value = await serversClient.getDataAsync(serverIp, key);
-        if (value.type === MaybeType.Just){
+        if (value.type === MaybeType.Just) {
             chosenServerIp = serverIp;
             break;
         }
     }
 
     if (value.type === MaybeType.Nothing){
-        console.log("not present.")
         res.status(NotFound).send({
-            description: `The requested resource was not found. No value found for key ${key}`
+            description: CGetNotFound,
+            key: key
         });
         
         return;
     } 
 
-    console.log("succeeded.");
     res.status(Ok).send({
-        description: `Ok. Retrieved value ${value.value} for key ${key} from server ${chosenServerIp}`,
+        description: CGetOk,
+        respondingServerIp: chosenServerIp, 
+        key: key,
         value: value.value
     });
 });
@@ -181,7 +200,7 @@ function shufflePool(serverPool: string[]): void {
 
 // start the Express server
 app.listen(port, () => {
-    console.log(`cache server started at http://localhost:${port}`);
+    console.log(`cache manager running and listening to port ${port}`);
 });
 
 

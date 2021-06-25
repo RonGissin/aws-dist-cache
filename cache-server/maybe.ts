@@ -1,3 +1,7 @@
+/**
+ * A module that defines the Maybe type for null safety.
+ */
+
 export enum MaybeType {
     Just = 'maybe-type__just',
     Nothing = 'maybe-type__nothing',

@@ -1,20 +1,15 @@
-import fs from 'fs';
-import util from 'util';
 import { Maybe, Nothing, Just } from './maybe';
-
-//const HashRing = require('./consistent-hashing/hash-ring.js'); 
 const HashRing = require('hashring');
+
 /**
- * A class that defines a cache manager that handles consistent hashing between servers.
+ * A class that defines a handler that handles consistent hashing between servers.
  */
 
-export class CacheManager {
+export class ServerHashRingHandler {
     /**
      * @constructor
      */
     constructor(){
-        // promisify to enable async/await.
-        this._readFileAsync = util.promisify(fs.readFile);
         this._hashRing = new HashRing();
     }
 
@@ -34,7 +29,7 @@ export class CacheManager {
      * Adds the given server ip to the hash ring.
      * @param serverIp The ip of the server to add.
      */
-    public AddServerToHashRing(serverIp: string): void {
+    public AddServer(serverIp: string): void {
         this._hashRing.add(serverIp);
     }
 
@@ -42,10 +37,9 @@ export class CacheManager {
      * Remove the given server ip from the hash ring.
      * @param serverIp The ip of the server to remove.
      */
-    public RemoveServerFromHashRing(serverIp: string): void {
+    public RemoveServer(serverIp: string): void {
         this._hashRing.remove(serverIp);
     }
 
-    private _hashRing: any; 
-    private _readFileAsync: Function;
+    private _hashRing: any;
 }
