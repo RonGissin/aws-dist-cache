@@ -1,7 +1,7 @@
 import express from "express";
 import { PutRequestValidator } from "./request-validator";
 import { AddNodeRequestValidator } from "./add-node-validator";
-import { CacheManager } from "./cache-manager";
+import { ServerHashRingHandler } from "./hash-ring-handler";
 import { CacheServerClient } from "./cache-server-client";
 import { ServerHealthChecker } from "./server-health-checker";
 import { Maybe, MaybeType, Nothing, Just } from "./maybe";
@@ -28,7 +28,7 @@ const port = 5000;
 
 const putValidator = new PutRequestValidator();
 const addNodeValidator = new AddNodeRequestValidator();
-const cacheManager = new CacheManager();
+const cacheManager = new ServerHashRingHandler();
 const serversClient = new CacheServerClient();
 const serverHealthChecker = new ServerHealthChecker();
 const primaryToNodeListMap = new Map<string, string[]>();
@@ -52,7 +52,7 @@ app.post("/addNode", async (req, res) => {
     if (isNewPrimaryNode) {
         primaryToNodeListMap.set(serverIp, [serverIp]);
 
-        cacheManager.AddServerToHashRing(serverIp);
+        cacheManager.AddServer(serverIp);
         res.status(Ok).send({
             description: CAddedPrimaryServerOk,
             primaryServerIp: serverIp
