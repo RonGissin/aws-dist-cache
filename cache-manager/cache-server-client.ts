@@ -26,7 +26,7 @@ export class CacheServerClient {
                 body: JSON.stringify(payload),
             });
         } catch(e) {
-            console.log(`Exception while trying to connect with server - ${serverIp}`);
+            console.log(`Exception while trying to connect with server - ${serverIp}. error = ${e}`);
         }
     }
 
