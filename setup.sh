@@ -102,10 +102,11 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     cd aws-dist-cache
     cd cache-manager
     npm install -g typescript
+    npm install forever -g
     npm install
     # run app
     npm run build
-    nohup npm start --host 0.0.0.0  &>/dev/null &
+    nohup forever start dist/app.js --host 0.0.0.0  &>/dev/null &
     exit
 EOF
 
@@ -172,10 +173,11 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     mkdir dist && touch dist/ipconfig.txt
     curl http://169.254.169.254/latest/meta-data/public-ipv4 > dist/ipconfig.txt
     npm install -g typescript
+    npm install forever -g
     npm install
     # run app
     npm run build
-    nohup npm start --host 0.0.0.0  &>/dev/null &
+    nohup forever start dist/app.js --host 0.0.0.0  &>/dev/null &
     exit
 EOF
 
@@ -222,10 +224,11 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     mkdir dist && touch dist/ipconfig.txt
     curl http://169.254.169.254/latest/meta-data/public-ipv4 > dist/ipconfig.txt
     npm install -g typescript
+    npm install forever -g
     npm install
     # run app
     npm run build
-    nohup npm start --host 0.0.0.0  &>/dev/null &
+    nohup forever start dist/app.js --host 0.0.0.0  &>/dev/null &
     exit
 EOF
 
@@ -272,10 +275,11 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     mkdir dist && touch dist/ipconfig.txt
     curl http://169.254.169.254/latest/meta-data/public-ipv4 > dist/ipconfig.txt
     npm install -g typescript
+    npm install forever -g
     npm install
     # run app
     npm run build
-    nohup npm start --host 0.0.0.0  &>/dev/null &
+    nohup forever start dist/app.js --host 0.0.0.0  &>/dev/null &
     exit
 EOF
 
@@ -322,10 +326,11 @@ ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-use
     mkdir dist && touch dist/ipconfig.txt
     curl http://169.254.169.254/latest/meta-data/public-ipv4 > dist/ipconfig.txt
     npm install -g typescript
+    npm install forever -g
     npm install
     # run app
     npm run build
-    nohup npm start --host 0.0.0.0  &>/dev/null &
+    nohup forever start dist/app.js --host 0.0.0.0  &>/dev/null &
     exit
 EOF
 
