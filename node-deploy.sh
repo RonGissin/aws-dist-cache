@@ -77,7 +77,7 @@ echo "Created new instance $NODE_INSTANCE_ID @ $PUBLIC_IP_NODE"
 echo "setup production environment on instance"
 ssh -i $KEY_PEM -o "StrictHostKeyChecking=no" -o "ConnectionAttempts=10" ec2-user@$PUBLIC_IP_NODE <<EOF
     # update
-    # sudo yum update -y
+    ## sudo yum update -y
     # install git
     sudo yum install git -y
     # install nvm
