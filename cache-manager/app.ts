@@ -1,6 +1,6 @@
 import express from "express";
-import { PutRequestValidator } from "./request-validator";
-import { AddNodeRequestValidator } from "./add-node-validator";
+import { PutRequestValidator } from "./validators/request-validator";
+import { AddNodeRequestValidator } from "./validators/add-node-validator";
 import { ServerHashRingHandler } from "./hash-ring-handler";
 import { CacheServerClient } from "./cache-server-client";
 import { ServerHealthChecker } from "./server-health-checker";
